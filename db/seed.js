@@ -15,7 +15,7 @@ console.log("🌱 Database seeded.");
  *  You will have to edit how playlists are seeded as well, since they now are required to belong to a user!
  */
 async function seed() {
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 25; i++) {
     await createTrack("Track " + i, i * 50000);
   }
 
