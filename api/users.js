@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 export default router;
 
-import { createUser } from "#db/queries/users";
+import { createUser, getUserByUsernameAndPassword } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
 import { createToken } from "#utils/jwt";
 
@@ -18,6 +18,22 @@ router.post(
     const { username, password } = req.body;
     const user = await createUser(username, password);
     const token = await createToken({ id: user.id });
-    res.status(201).send(token);
+    res.send(token);
+  },
+);
+
+/**POST /users/login
+ * sends 400 if request body is missing username or password
+ * sends a token if the provided credentials are valid
+ */
+router.post(
+  "/login",
+  requireBody(["username", "password"]),
+  async (req, res) => {
+    const { username, password } = req.body;
+    const user = await getUserByUsernameAndPassword(username, password);
+    if (!user) return res.status(401).send("Invalid username or password.");
+    const token = createToken({ id: user.id });
+    res.send(token);
   },
 );
