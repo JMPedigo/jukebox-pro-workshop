@@ -5,24 +5,23 @@ export default router;
 import {
   createPlaylist,
   getPlaylistById,
-  getPlaylists,
+  getPlaylistsByUserId,
 } from "#db/queries/playlists";
 import { createPlaylistTrack } from "#db/queries/playlists_tracks";
 import { getTracksByPlaylistId } from "#db/queries/tracks";
+import requireUser from "#middleware/requireUser";
+import requireBody from "#middleware/requireBody";
+
+router.use(requireUser);
 
 router.get("/", async (req, res) => {
-  const playlists = await getPlaylists();
+  const playlists = await getPlaylistsByUserId(req.user.id);
   res.send(playlists);
 });
 
-router.post("/", async (req, res) => {
-  if (!req.body) return res.status(400).send("Request body is required.");
-
+router.post("/", requireBody(["name", "description"]), async (req, res) => {
   const { name, description } = req.body;
-  if (!name || !description)
-    return res.status(400).send("Request body requires: name, description");
-
-  const playlist = await createPlaylist(name, description);
+  const playlist = await createPlaylist(name, description, req.user.id);
   res.status(201).send(playlist);
 });
 
