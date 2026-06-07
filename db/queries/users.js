@@ -44,4 +44,5 @@ export async function getUserById(id) {
   const {
     rows: [user],
   } = await db.query(sql, [id]);
+  return user;
 }
