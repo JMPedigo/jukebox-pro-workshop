@@ -33,19 +33,19 @@ router.param("id", async (req, res, next, id) => {
   const playlist = await getPlaylistById(id);
   if (!playlist) return res.status(404).send("Playlist not found.");
 
-  router.get("/:id", (req, res) => {
-    if (req.user.id !== req.playlist.user_id) {
-      return res
-        .status(403)
-        .send(
-          "You are not authorized to access playlists owned by another user.",
-        );
-    }
-    res.send(req.playlist);
-  });
-
   req.playlist = playlist;
   next();
+});
+
+router.get("/:id", (req, res) => {
+  if (req.user.id !== req.playlist.user_id) {
+    return res
+      .status(403)
+      .send(
+        "You are not authorized to access playlists owned by another user.",
+      );
+  }
+  res.send(req.playlist);
 });
 
 /**  */
@@ -59,6 +59,7 @@ router.get("/:id/tracks", async (req, res) => {
   const tracks = await getTracksByPlaylistId(req.playlist.id);
   res.send(tracks);
 });
+
 /** GET /playlists/:id/tracks sends 403 error if the user does not own the playlist. */
 router.post("/:id/tracks", requireBody(["trackId"]), async (req, res) => {
   if (playlist.user_id !== req.user.id)
