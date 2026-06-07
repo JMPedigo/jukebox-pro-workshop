@@ -18,7 +18,7 @@ router.post(
     const { username, password } = req.body;
     const user = await createUser(username, password);
     const token = await createToken({ id: user.id });
-    res.send(token);
+    res.status(201).send(token);
   },
 );
 
