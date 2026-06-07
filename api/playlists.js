@@ -12,13 +12,16 @@ import { getTracksByPlaylistId } from "#db/queries/tracks";
 import requireUser from "#middleware/requireUser";
 import requireBody from "#middleware/requireBody";
 
+/** 🔒All /playlists routes now require the user to be logged in. */
 router.use(requireUser);
 
+/** GET /playlists sends array of all playlists owned by the user. */
 router.get("/", async (req, res) => {
   const playlists = await getPlaylistsByUserId(req.user.id);
   res.send(playlists);
 });
 
+/** POST /playlists creates a new playlist owned by the user. */
 router.post("/", requireBody(["name", "description"]), async (req, res) => {
   const { name, description } = req.body;
   const playlist = await createPlaylist(name, description, req.user.id);
