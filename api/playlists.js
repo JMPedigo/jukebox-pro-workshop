@@ -50,7 +50,7 @@ router.get("/:id", (req, res) => {
 
 /**  */
 router.get("/:id/tracks", async (req, res) => {
-  if (playlist.user_id !== req.user.id)
+  if (req.playlist.user_id !== req.user.id)
     return res
       .status(403)
       .send(
@@ -62,7 +62,7 @@ router.get("/:id/tracks", async (req, res) => {
 
 /** GET /playlists/:id/tracks sends 403 error if the user does not own the playlist. */
 router.post("/:id/tracks", requireBody(["trackId"]), async (req, res) => {
-  if (playlist.user_id !== req.user.id)
+  if (req.playlist.user_id !== req.user.id)
     return res
       .status(403)
       .send(
