@@ -23,7 +23,9 @@ router.get("/:id", (req, res) => {
   res.send(req.track);
 });
 
-router.get("/:id/playlists", requireUser, async (req, res) => {
-  const playlists = await getPlaylistByTrackId(req.track.id);
+router.use(requireUser);
+
+router.get("/:id/playlists", async (req, res) => {
+  const playlists = await getPlaylistByTrackId(req.track.id, req.user.id);
   res.send(playlists);
 });
