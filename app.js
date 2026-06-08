@@ -3,19 +3,18 @@ const app = express();
 export default app;
 
 import morgan from "morgan";
+import getUserFromToken from "#middleware/getUserFromToken";
 import tracksRouter from "#api/tracks";
 import playlistsRouter from "#api/playlists";
 import usersRouter from "#api/users";
-import getUserFromToken from "#middleware/getUserFromToken";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.use(getUserFromToken);
-
-app.use("/tracks", tracksRouter);
 app.use("/playlists", playlistsRouter);
+app.use("/tracks", tracksRouter);
 app.use("/users", usersRouter);
 
 app.use((err, req, res, next) => {
