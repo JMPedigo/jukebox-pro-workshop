@@ -23,7 +23,7 @@ async function seed() {
     const user = await createUser("user" + i, "password");
     await createPlaylist("playlist" + i, "description" + i, user.id);
     for (let j = 0; j < 5; j++) {
-      await createPlaylistTrack(user.id, (i - 1) * 5 + j + 1);
+      await createPlaylistTrack(playlist.id, (i - 1) * 5 + j + 1);
     }
   }
 }
